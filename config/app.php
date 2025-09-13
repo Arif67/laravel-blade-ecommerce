@@ -195,7 +195,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         
-        shurjopayv2\ShurjopayLaravelPackage8\ShurjopayServiceProvider::class
+//        shurjopayv2\ShurjopayLaravelPackage8\ShurjopayServiceProvider::class
 
     ],
 

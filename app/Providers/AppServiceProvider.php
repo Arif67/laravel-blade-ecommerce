@@ -38,18 +38,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //Cache shurjopay credentials separately (config set, not shared in view)
-        $shurjopay = Cache::remember('payment_shurjopay', 3600, function () {
-            return PaymentGateway::where(['status' => 1, 'type' => 'shurjopay'])->first();
-        });
+     //   $shurjopay = Cache::remember('payment_shurjopay', 3600, function () {
+       //     return PaymentGateway::where(['status' => 1, 'type' => 'shurjopay'])->first();
+       // });
 
-        if ($shurjopay) {
-            Config::set('shurjopay.apiCredentials.username', $shurjopay->username);
-            Config::set('shurjopay.apiCredentials.password', $shurjopay->password);
-            Config::set('shurjopay.apiCredentials.prefix', $shurjopay->prefix);
-            Config::set('shurjopay.apiCredentials.return_url', $shurjopay->success_url);
-            Config::set('shurjopay.apiCredentials.cancel_url', $shurjopay->return_url);
-            Config::set('shurjopay.apiCredentials.base_url', $shurjopay->base_url);
-        }
+//        if ($shurjopay) {
+  //          Config::set('shurjopay.apiCredentials.username', $shurjopay->username);
+    //        Config::set('shurjopay.apiCredentials.password', $shurjopay->password);
+      //      Config::set('shurjopay.apiCredentials.prefix', $shurjopay->prefix);
+        //    Config::set('shurjopay.apiCredentials.return_url', $shurjopay->success_url);
+          //  Config::set('shurjopay.apiCredentials.cancel_url', $shurjopay->return_url);
+           // Config::set('shurjopay.apiCredentials.base_url', $shurjopay->base_url);
+       // }
 
         // Group all shared frontend data into one cached array
         $sharedData = Cache::remember('shared_view_data', 3600, function () {
