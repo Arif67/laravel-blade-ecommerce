@@ -6,27 +6,27 @@
         <title>{{ $generalsetting->name }}</title>
         <link rel="shortcut icon" href="{{asset($generalsetting->favicon)}}" type="image/x-icon" />
         <!-- fot awesome -->
-        <link rel="stylesheet" href="{{ asset('public/frontEnd/campaign/css') }}/all.css" />
+        <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/all.css" />
         <!-- core css -->
-        <link rel="stylesheet" href="{{ asset('public/frontEnd/campaign/css') }}/bootstrap.min.css" />
-        <link rel="stylesheet" href="{{asset('public/backEnd/')}}/assets/css/toastr.min.css" />
+        <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/bootstrap.min.css" />
+        <link rel="stylesheet" href="{{asset('backEnd/')}}/assets/css/toastr.min.css" />
         <!-- owl carousel -->
-        <link rel="stylesheet" href="{{ asset('public/frontEnd/campaign/css') }}/owl.theme.default.css" />
-        <link rel="stylesheet" href="{{ asset('public/frontEnd/campaign/css') }}/owl.carousel.min.css" />
+        <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/owl.theme.default.css" />
+        <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/owl.carousel.min.css" />
         <!-- owl carousel -->
-        <link rel="stylesheet" href="{{ asset('public/frontEnd/campaign/css') }}/style.css" />
-        <link rel="stylesheet" href="{{ asset('public/frontEnd/campaign/css') }}/responsive.css" />
+        <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/style.css" />
+        <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/responsive.css" />
         @foreach($pixels as $pixel)
         <!-- Facebook Pixel Code -->
-        
+
         <!-- End Facebook Pixel Code -->
         @endforeach
-        
+
         <meta name="app-url" content="{{route('campaign',$campaign->slug)}}" />
         <meta name="robots" content="index, follow" />
         <meta name="description" content="{{$campaign->short_description}}" />
         <meta name="keywords" content="{{ $campaign->slug }}" />
-        
+
         <!-- Twitter Card data -->
         <meta name="twitter:card" content="product" />
         <meta name="twitter:site" content="{{$campaign->name}}" />
@@ -35,7 +35,7 @@
         <meta name="twitter:creator" content="" />
         <meta property="og:url" content="{{route('campaign',$campaign->slug)}}" />
         <meta name="twitter:image" content="{{asset($campaign->banner)}}" />
-        
+
         <!-- Open Graph data -->
         <meta property="og:title" content="{{$campaign->name}}" />
         <meta property="og:type" content="product" />
@@ -173,7 +173,7 @@
                                     @endif
                                     <p>বর্তমান দাম {{$new_price}}/=</p>
                                 </h2>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -263,7 +263,7 @@
                                                                             name="product_color"
                                                                             class="selector-item_radio emptyalert stock_color stock_check" required data-color="{{ $procolor->color}}"
                                                                         />
-                                                                        <label for="fc-option{{ $procolor->color }}" class="selector-item_label">{{ $procolor->color}} 
+                                                                        <label for="fc-option{{ $procolor->color }}" class="selector-item_label">{{ $procolor->color}}
                                                                         </label>
                                                                     </div>
                                                                     @endforeach
@@ -271,7 +271,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @endif 
+                                                    @endif
                                                     @if($productsizes->count() > 0)
                                                         <div class="pro-size" style="width: 100%;">
                                                             <div class="size_inner">
@@ -284,7 +284,7 @@
                                                                                     id="f-option{{ $prosize->size }}"
                                                                                     value="{{ $prosize->size}}"
                                                                                     name="product_size"
-                                                                                    class="selector-item_radio emptyalert stock_size stock_check" data-size="{{ $prosize->size}}" 
+                                                                                    class="selector-item_radio emptyalert stock_size stock_check" data-size="{{ $prosize->size}}"
                                                                                     required />
                                                                                 <label
                                                                                     for="f-option{{ $prosize->size }}"
@@ -384,16 +384,16 @@
         </div>
     </section>
 
-        <script src="{{ asset('public/frontEnd/campaign/js') }}/jquery-2.1.4.min.js"></script>
-        <script src="{{ asset('public/frontEnd/campaign/js') }}/all.js"></script>
-        <script src="{{ asset('public/frontEnd/campaign/js') }}/bootstrap.min.js"></script>
-        <script src="{{ asset('public/frontEnd/campaign/js') }}/owl.carousel.min.js"></script>
-        <script src="{{ asset('public/frontEnd/campaign/js') }}/select2.min.js"></script>
-        <script src="{{ asset('public/frontEnd/campaign/js') }}/script.js"></script>
-        <script src="{{asset('public/backEnd/')}}/assets/js/toastr.min.js"></script>
-        {!! Toastr::message() !!} 
-        
-      
+        <script src="{{ asset('frontEnd/campaign/js') }}/jquery-2.1.4.min.js"></script>
+        <script src="{{ asset('frontEnd/campaign/js') }}/all.js"></script>
+        <script src="{{ asset('frontEnd/campaign/js') }}/bootstrap.min.js"></script>
+        <script src="{{ asset('frontEnd/campaign/js') }}/owl.carousel.min.js"></script>
+        <script src="{{ asset('frontEnd/campaign/js') }}/select2.min.js"></script>
+        <script src="{{ asset('frontEnd/campaign/js') }}/script.js"></script>
+        <script src="{{asset('backEnd/')}}/assets/js/toastr.min.js"></script>
+        {!! Toastr::message() !!}
+
+
         <!-- bootstrap js -->
         <script>
             $(document).ready(function () {
@@ -478,7 +478,7 @@
 
         </script>
         <script>
-            $('.review_slider').owlCarousel({   
+            $('.review_slider').owlCarousel({
                 dots: false,
                 arrow: false,
                 autoplay: true,
@@ -527,8 +527,8 @@
                             console.log(status);
                             // return cart_content();
                         }
-                    });   
-                }  
+                    });
+                }
             });
             function cart_content() {
                 $.ajax({
