@@ -20,6 +20,8 @@ use App\Models\Productsize;
 use App\Models\Customer;
 use App\Models\Contact;
 use App\Models\OrderDetails;
+use App\Models\PaymentGateway;
+
 use App\Models\ProductVariable;
 use App\Models\Order;
 use App\Models\Review;
@@ -33,70 +35,43 @@ use Illuminate\Support\Str;
 use Log;
 class FrontendController extends Controller
 {
-    public function index()
-    {
-        $data = Cache::remember('home_page_data', 3600, function () {
-            $frontcategory = Category::where(['status' => 1])
-                ->select('id', 'name', 'image', 'slug', 'status','icon')
-                ->get();
+  public function index()
+{
 
-            $sliders = Banner::where(['status' => 1, 'category_id' => 1])
-                ->select('id', 'image', 'link')
-                ->get();
-                
-
-            $hotdeal_top = Product::where(['status' => 1, 'topsale' => 1])
-                ->orderBy('id', 'DESC')
-                ->select('id', 'name', 'slug', 'new_price', 'old_price', 'type')
-                ->withCount('variable')
-                ->limit(12)
-                ->get();
-
-            $newArrival = Product::where('status', 1)
-                ->orderBy('id', 'DESC')
-                ->select('id', 'name', 'slug', 'new_price', 'old_price', 'type')
-                ->withCount('variable')
-                ->limit(7)
-                ->get();
-
-           
-
-          $homecategory = Category::where([ 'front_view' => 1, 'status' => 1])
-                ->with(['products' => function ($query) {
-                    $query->where('status', 1)
-                        ->orderBy('id', 'DESC')
-                        ->with('image', 'variable')
-                        ->withCount('variable')
-                        ->take(30);
-                }])
-                ->orderBy('id', 'ASC')
-                ->get();
+    $data['campaign'] = Campaign::with('images')->first();
+      
+      
 
 
-              //  dd($homecategory);
-                $featured = Category::where([ 'status' => 1, 'featured' => 1])
-                ->with(['products' => function ($query) {
-                    $query->where('status', 1)
-                        ->orderBy('id', 'DESC')
-                        ->with('image', 'variable')
-                        ->withCount('variable')
-                        ->limit(8);
-                }])
-                ->orderBy('id', 'ASC')
-                ->get();
+    $select_charge = ShippingCharge::where(['status'=>1,'website'=>1])->first();
 
-            return [
-                'newArrival'=>$newArrival,
-                'sliders' => $sliders,
-                'frontcategory' => $frontcategory,
-                'hotdeal_top' => $hotdeal_top,
-                'homecategory' => $homecategory,
-                'featured' => $featured
-            ];
-        });
+    $data['shippingcharge'] = ShippingCharge::where(['status'=>1,'website'=>1])->get();
+    $data['select_charge'] = $select_charge;
 
-        return view('frontEnd.layouts.pages.index', $data);
+    $data['bkash_gateway'] = PaymentGateway::where(['status'=> 1, 'type'=>'bkash'])->first();
+    $data['shurjopay_gateway'] = PaymentGateway::where(['status'=> 1, 'type'=>'shurjopay'])->first();
+
+    if(Session::get('free_shipping') == 1){
+        Session::put('shipping', 0);
+    } else {
+        Session::put('shipping', $select_charge->amount ?? 0);
     }
+
+    $data['products'] = Product::with([
+        'image',
+        'images',
+        'reviews',
+        'category',
+        'subcategory',
+        'childcategory',
+        'brand',
+        'variables'
+    ])->get();
+
+    return view('frontEnd.layouts.pages.index', $data);
+}
+
+
 
 
     public function hotdeals(Request $request)
@@ -416,16 +391,18 @@ class FrontendController extends Controller
     {
 
         $campaign = Campaign::where('slug', $slug)->with('images')->first();
-
+      
         $product = Product::select('id', 'name', 'slug', 'new_price', 'old_price', 'purchase_price', 'type', 'stock')->where(['id' => $campaign->product_id])->first();
-        // return $product;
-        $productcolors = ProductVariable::where('product_id', $campaign->product_id)->where('stock', '>', 0)
+      
+
+    
+        $productcolors = ProductVariable::where('product_id', $campaign?->product_id)->where('stock', '>', 0)
             ->whereNotNull('color')
             ->select('color')
             ->distinct()
             ->get();
 
-        $productsizes = ProductVariable::where('product_id', $campaign->product_id)->where('stock', '>', 0)
+        $productsizes = ProductVariable::where('product_id', $campaign?->product_id)->where('stock', '>', 0)
             ->whereNotNull('size')
             ->select('size')
             ->distinct()
@@ -434,7 +411,8 @@ class FrontendController extends Controller
         Cart::instance('shopping')->destroy();
 
 
-        $var_product = ProductVariable::where(['product_id' => $campaign->product_id])->first();
+        $var_product = ProductVariable::where(['product_id' => $campaign?->product_id])->first();
+        $var_product_list = ProductVariable::where(['product_id' => $campaign?->product_id])->get();
         if ($product->type == 0) {
             $purchase_price = $var_product ? $var_product->purchase_price : 0;
             $old_price = $var_product ? $var_product->old_price : 0;
@@ -468,7 +446,7 @@ class FrontendController extends Controller
         $shippingcharge = ShippingCharge::where('status', 1)->get();
         $select_charge = ShippingCharge::where('status', 1)->first();
         Session::put('shipping', $select_charge->amount);
-        return view('frontEnd.layouts.pages.campaign.campaign', compact('campaign', 'productsizes', 'productcolors', 'shippingcharge', 'old_price', 'new_price'));
+        return view('frontEnd.layouts.pages.campaign.campaign', compact('campaign', 'var_product_list', 'productsizes', 'productcolors', 'shippingcharge', 'old_price', 'new_price'));
     }
     public function campaign_stock(Request $request)
     {

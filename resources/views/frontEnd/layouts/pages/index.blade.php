@@ -15,6 +15,14 @@
 <link rel="stylesheet" href="{{ asset('frontEnd/css/owl.carousel.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('frontEnd/css/owl.theme.default.min.css') }}" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" rel="stylesheet" />
+ @php
+    $subtotal = Cart::instance('shopping')->subtotal();
+    $subtotal = str_replace(',', '', $subtotal);
+    $subtotal = str_replace('.00', '', $subtotal);
+    $shipping = Session::get('shipping') ? Session::get('shipping') : 0;
+    $coupon = Session::get('coupon_amount') ? Session::get('coupon_amount') : 0;
+    $discount = Session::get('discount')?Session::get('discount'):0;
+@endphp
 <style>
     .newArrival {
         background: #F5F5F5;
@@ -59,609 +67,498 @@
     .gradient-text:hover {
         transform: scale(1.05);
     }
+
+    .product_grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns on large screens */
+    gap: 20px;
+}
+
+.product_item {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Tablet: 3 columns */
+@media (max-width: 992px) {
+    .product_grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile: 2 columns */
+@media (max-width: 576px) {
+    .product_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
 </style>
 @endpush @section('content')
-<section class="slider-section">
-    <div class="container">
-        @php
-        $firstSlider = $sliders->get(0); 
-        $sideImages = $sliders->slice(1, 2); 
-        $remainingSliders = $sliders->slice(3);
-        @endphp
 
-        <div class="row g-2 align-items-stretch">
-            <!-- Left: Main Slider -->
-            <div class="col-sm-8 col-12">
-                <div class="home-slider-container border rounded shadow-sm overflow-hidden">
-                    <div class="main_slider owl-carousel">
-
-                        @if($firstSlider)
-                            <div class="slider-item">
-                                <a href="{{ $firstSlider->link ?? '#' }}">
-                                    <img src="{{ asset($firstSlider->image) }}" alt="Slider Image" class="img-fluid h-100 w-100 rounded">
-                                </a>
-                            </div>
-                        @endif
-
-                        @foreach ($remainingSliders as $slider)
-                            <div class="slider-item">
-                                <a href="{{ $slider->link ?? '#' }}">
-                                    <img src="{{ asset($slider->image) }}" alt="Slider Image" class="img-fluid w-100 rounded">
-                                </a>
-                            </div>
-                        @endforeach
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right: Side Images -->
-            <div class="col-sm-4 d-none d-sm-flex flex-column justify-content-between">
-                @foreach ($sideImages as $img)
-                    <div class="mb-2">
-                        <a href="{{ $img->link ?? '#' }}">
-                            <img src="{{ asset($img->image) }}" alt="Side Image" class="img-fluid rounded shadow-sm w-100">
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- slider end -->
-
-<section class="homeproduct">
-    <div class="container">
-        <div class="row">
-            <div class="liner-continer d-flex align-items-center justify-content-center my-4">
-                <div class="flex-grow-1">
-                    <hr class="m-0" />
-                </div>
-                <h4 class="woodmart-title-container title mx-3">
-                    Shop by Category
-                </h4>
-                <div class="flex-grow-1">
-                    <hr class="m-0" />
-                </div>
-            </div>
-
-
-            <style>
-                .cat-img-circle cat_item {
-                    width: 100px;
-                    height: 100px;
-                    object-fit: cover;
-                    border-radius: 50%;
-                    border: 2px solid #ddd;
-                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                    transition: 0.3s ease;
-                }
-
-                .cat-img-circle:hover {
-                    transform: scale(1.05);
-                }
-            </style>
-            <div class="col-sm-12">
-                <div class="topcategory product_slider-category owl-carousel">
-                    @foreach ($frontcategory as $key => $value)
-                 
-                    <div class="cat_item text-center" style="max-width: 80px; margin: 5px auto;">
-                        <div class="cat_img mb-1 shadow-sm">
-                            <a href="{{ route('category', $value->slug) }}">
-                                <img src="{{ asset($value?->icon) }}" alt="{{ $value?->name }}" class="rounded-circle" />
-                            </a>
-                        </div>
-                        <div class="cat_name">
-                            <a href="{{ route('category', $value?->slug) }}" class="text-dark text-decoration-none fw-medium">
-                                {{ $value->name }}
-                            </a>
-                        </div>
-                    </div>
-
-                    @endforeach
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-
-
-<!-- new Arrival -->
-
-
-<section class="homeproduct">
-    <div class="container">
-        <div class="row newArrival">
-            <div class="col-sm-12">
-                <div class="sec_title">
-                    <h3 class="section-title-header">
-                        <div class="timer_inner">
-                            <div class="text-center my-3">
-                                <span class="section-title-name fw-semibold fs-5 px-3 py-1 rounded bg-light border-start border-4 border-info d-inline-block shadow-sm">
-                                    <span class="text-info fw-bold">New</span> Arrival
-                                </span>
-                            </div>
-
-
-                            <div class="text-center mt-2">
-                                <a class="btn px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark view-all-btn" href="#">
-                                    VIEW ALL <i class="fa-solid fa-angles-right ms-1"></i>
-                                </a>
-                            </div>
-
-                        </div>
-                    </h3>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="product_slider owl-carousel">
-                    @foreach ($newArrival as $key => $value)
-                    <div class="product_item wist_item">
-                        <div class="product_item_inner">
-                            @if($value->variable_count > 0 && $value->type == 0)
-                            @if($value->variable->old_price)
-                            <div class="discount">
-                                <p>@php $discount=(((($value->variable->old_price)-($value->variable->new_price))*100) / ($value->variable->old_price)) @endphp -{{ number_format($discount, 0) }}%</p>
-
-                            </div>
-                            @endif
-                            @else
-                            @if($value->old_price)
-                            <div class="discount">
-                                <p>@php $discount=(((($value->old_price)-($value->new_price))*100) / ($value->old_price)) @endphp -{{ number_format($discount, 0) }}%</p>
-                            </div>
-                            @endif
-                            @endif
-                            <div class="pro_img">
-                                <a href="{{ route('product', $value->slug) }}">
-                                    <img src="{{ asset($value->image ? $value->image->image : '') }}"
-                                        alt="{{ $value->name }}" />
-                                </a>
-                            </div>
-                            <div class="pro_des">
-                                <div class="pro_name mb-0 m-0">
-                                    <a
-                                        href="{{ route('product', $value->slug) }}">{{ Str::limit($value->name, 35) }}</a>
-                                </div>
-                                <div class="pro_price mt-0">
-                                    @if($value->variable_count > 0 && $value->type == 0)
-                                    <p>
-                                        @if ($value->variable->old_price)
-                                        <del>৳ {{ $value->variable->old_price }}</del>
-                                        @endif
-
-                                        ৳ {{ $value->variable->new_price }}
-
-                                    </p>
-                                    @else
-                                    <p>
-                                        @if ($value->old_price)
-                                        <del>৳ {{ $value->old_price }}</del>
-                                        @endif
-
-                                        ৳ {{ $value->new_price }}
-
-                                    </p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        @if($value->variable_count > 0 && $value->type == 0)
-                        <div class="pro_btn">
-
-                            <div class="cart_btn order_button">
-                                <a style="background: #1a81b7;" href="{{ route('product', $value->slug) }}"
-                                    class="addcartbutton">অর্ডার করুন </a>
-                            </div>
-                        </div>
-                        @else
-                        <div class="pro_btn">
-
-                            <form action="{{ route('cart.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $value->id }}" />
-                                <input type="hidden" name="qty" value="1" />
-                                <input type="hidden" name="order_now" value="অর্ডার করুন" />
-                                <button style="background: #1a81b7;" type="submit">অর্ডার করুন</button>
-                            </form>
-                        </div>
-                        @endif
-
-
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-
-<style>
-    .equal-height {
-        height: 100%;
-        object-fit: cover;
+      <script>
+    // Function to save the scroll position
+    function saveScrollPosition() {
+        localStorage.setItem('scrollPosition', window.scrollY);
     }
 
-    .img-height-responsive {
-        height: 100%;
-    }
-
-    @media (min-width: 768px) {
-        .img-height-responsive {
-            height: 85% !important;
+    // Function to restore the scroll position
+    function restoreScrollPosition() {
+        const scrollPosition = localStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            localStorage.removeItem('scrollPosition'); // Clean up after restoring
         }
     }
 
-    .order-now-btn {
-        display: inline-block;
-        background: #1a81b7;
-        color: #fff;
-        padding: 5px;
-        border: none;
-        width: 100%;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 5px 15px rgba(248, 87, 166, 0.3);
-    }
+    // Save the scroll position before the page unloads
+    window.addEventListener('beforeunload', saveScrollPosition);
 
-    .order-now-btn:hover {
-        background: linear-gradient(135deg, #ff5858, #f857a6);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px #0b87caff;
-    }
-</style>
+    // Restore the scroll position when the page loads
+    window.addEventListener('load', restoreScrollPosition);
+</script>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- New Arrival -->
-
-<section class="homeproduct">
-    <div class="container">
-        <div class="row newArrival">
-            <div class="col-sm-12">
-                <div class="sec_title">
-                    <h3 class="section-title-header">
-                        <div class="timer_inner">
-                            <div class="text-center my-3">
-                                <span class="section-title-name fw-bold fs-4 gradient-text">
-                                    Super Deals
-                                </span>
-                            </div>
-
-
-                            <div class="">
-                                <div class="offer_timer" id="simple_timer"></div>
-                            </div>
-                        </div>
-                    </h3>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="product_slider owl-carousel">
-                    @foreach ($hotdeal_top as $key => $value)
-                    <div class="product_item wist_item">
-                        <div class="product_item_inner">
-                            @if($value->variable_count > 0 && $value->type == 0)
+<div class="container " style="margin-top:100px;>
+    <div class="row">
+        <div class="product_grid">
+            @foreach ($products as $key => $value)
+                <div class="product_item wist_item">
+                    <div class="product_item_inner">
+                        @if($value->variable_count > 0 && $value->type == 0)
                             @if($value->variable->old_price)
-                            <div class="discount">
-                                <p>@php $discount=(((($value->variable->old_price)-($value->variable->new_price))*100) / ($value->variable->old_price)) @endphp -{{ number_format($discount, 0) }}%</p>
-
-                            </div>
+                                <div class="discount">
+                                    <p>
+                                        @php 
+                                            $discount = ((($value->variable->old_price) - ($value->variable->new_price)) * 100) / ($value->variable->old_price);
+                                        @endphp 
+                                        -{{ number_format($discount, 0) }}%
+                                    </p>
+                                </div>
                             @endif
-                            @else
+                        @else
                             @if($value->old_price)
-                            <div class="discount">
-                                <p>@php $discount=(((($value->old_price)-($value->new_price))*100) / ($value->old_price)) @endphp -{{ number_format($discount, 0) }}%</p>
-                            </div>
+                                <div class="discount">
+                                    <p>
+                                        @php 
+                                            $discount = ((($value->old_price) - ($value->new_price)) * 100) / ($value->old_price);
+                                        @endphp 
+                                        -{{ number_format($discount, 0) }}%
+                                    </p>
+                                </div>
                             @endif
-                            @endif
-                            <div class="pro_img">
+                        @endif
+
+                        <div class="pro_img">
+                            <a href="{{ route('product', $value->slug) }}">
+                                <img src="{{ asset($value->image ? $value->image->image : '') }}" 
+                                    alt="{{ $value->name }}" />
+                            </a>
+                        </div>
+
+                        <div class="pro_des">
+                            <div class="pro_name">
                                 <a href="{{ route('product', $value->slug) }}">
-                                    <img src="{{ asset($value->image ? $value->image->image : '') }}"
-                                        alt="{{ $value->name }}" />
+                                    {{ Str::limit($value->name, 80) }}
                                 </a>
                             </div>
-                            <div class="pro_des">
-                                <div class="pro_name mb-0 m-0">
-                                    <a
-                                        href="{{ route('product', $value->slug) }}">{{ Str::limit($value->name, 35) }}</a>
-                                </div>
-                                <div class="pro_price mt-0">
-                                    @if($value->variable_count > 0 && $value->type == 0)
+                            <div class="pro_price">
+                                @if($value->variable_count > 0 && $value->type == 0)
                                     <p>
                                         @if ($value->variable->old_price)
-                                        <del>৳ {{ $value->variable->old_price }}</del>
+                                            <del>৳ {{ $value->variable->old_price }}</del>
                                         @endif
-
                                         ৳ {{ $value->variable->new_price }}
-
                                     </p>
-                                    @else
+                                @else
                                     <p>
                                         @if ($value->old_price)
-                                        <del>৳ {{ $value->old_price }}</del>
+                                            <del>৳ {{ $value->old_price }}</del>
                                         @endif
-
                                         ৳ {{ $value->new_price }}
-
                                     </p>
-                                    @endif
-                                </div>
+                                @endif
                             </div>
                         </div>
+                    </div>
+
+                 @php
+                        $cartItem = Cart::instance('shopping')->content()->where('id', $value->id)->first();
+                        @endphp
 
                         @if($value->variable_count > 0 && $value->type == 0)
-                        <div class="pro_btn">
-
-                            <div class="cart_btn order_button">
-                                <a style="background: #1a81b7;" href="{{ route('product', $value->slug) }}"
-                                    class="addcartbutton">অর্ডার করুন </a>
+                            {{-- Product has variations --}}
+                            <div class="d-flex gap-2 mt-2">
+                                @if($cartItem)
+                                    <a href="{{ route('product', $value->slug) }}" class="btn btn-secondary w-50">
+                                        নির্বাচিত
+                                    </a>
+                                    <a href="{{ route('product', $value->slug) }}" class="btn btn-secondary w-50">
+                                        নির্বাচিত
+                                    </a>
+                                @else
+                                    <a href="{{ route('product', $value->slug) }}" class="btn btn-success w-50">
+                                        প্রোডাক্ট নির্বাচন করুন
+                                    </a>
+                                    <a href="{{ route('product', $value->slug) }}" class="btn btn-primary w-50">
+                                        প্রোডাক্ট নির্বাচন করুন
+                                    </a>
+                                @endif
                             </div>
-                        </div>
                         @else
-                        <div class="pro_btn">
-
-                            <form action="{{ route('cart.store') }}" method="POST">
+                            {{-- Simple product --}}
+                            <form action="{{ route('cart.store') }}" method="POST" class="mt-2">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $value->id }}" />
                                 <input type="hidden" name="qty" value="1" />
-                                <input type="hidden" name="order_now" value="অর্ডার করুন" />
-                                <button style="background: #1a81b7;" type="submit">অর্ডার করুন</button>
+                                <div class="d-flex gap-2">
+                                    @if($cartItem)
+                                        <button type="button" class="btn btn-secondary w-100 text-center">
+                                            নির্বাচিত
+                                        </button>
+                                    @else
+                                        <button type="submit" name="add_cart" class="btn btn-success w-100 text-center">
+                                            প্রোডাক্ট নির্বাচন করুন
+                                        </button>
+                                    @endif
+                                </div>
                             </form>
-                        </div>
                         @endif
-
-
-                    </div>
-                    @endforeach
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
-</section>
+</div>
 
-@foreach ($homecategory as $homecat)
-
-<section class="homeproduct">
-    <div class="container">
+ <section   class="chheckout-section">
+    @php
+    $subtotal = Cart::instance('shopping')->subtotal();
+    $subtotal = str_replace(',', '', $subtotal);
+    $subtotal = str_replace('.00', '', $subtotal);
+    $shipping = Session::get('shipping') ? Session::get('shipping') : 0;
+    $coupon = Session::get('coupon_amount') ? Session::get('coupon_amount') : 0;
+    $discount = Session::get('discount')?Session::get('discount'):0;
+    @endphp
+    <div class="container" id="order_form">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="title-inner d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="section-title">
-                        <h2>{{ $homecat->name }}</h2>
-                    </div>
-                    <div class="section-btn">
-                        <a style="background:#C7206A;" href="{{ route('category', $homecat->slug) }}">View More</a>
+            <div class="col-sm-5 cus-order-2">
+                <div class="checkout-shipping">
+                    <style>
+                        .compact-form .form-label {
+                            font-size: 14px;
+                            line-height: 1.2;
+                            margin-bottom: 4px;
+                        }
+
+                        .compact-form input,
+                        .compact-form select {
+                            padding: 6px 10px;
+                            font-size: 14px;
+                            height: 36px;
+                        }
+
+                        .compact-form .card-header h6 {
+                            font-size: 14px;
+                            line-height: 1.4;
+                            margin-bottom: 0;
+                        }
+
+                        .compact-form button {
+                            font-size: 14px;
+                            padding: 6px 18px;
+                        }
+
+                        .compact-form .form-control,
+                        .compact-form .form-select {
+                            border-radius: 0.25rem;
+                        }
+
+                        .compact-form .card-body {
+                            padding: 16px;
+                        }
+
+                        .compact-form .card-header {
+                            padding: 12px 16px;
+                        }
+
+                        .compact-form .row {
+                            --bs-gutter-y: 0.5rem;
+                        }
+                    </style>
+                 <div  style="margin-top:130px; ">
+
+                 </div>
+                    <form action="{{ route('customer.ordersave') }}" method="POST" data-parsley-validate="" class="compact-form">
+                        @csrf
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-light border-bottom">
+                                <h6 class="text-danger fw-bold">
+                                     অযথা অর্ডার করবেন না।
+                                    কোনো কারণে প্রোডাক্ট রিটার্ন করলে ডেলিভারি চার্জ দিয়ে রিটার্ন করতে হবে।
+                                </h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row g-2">
+
+                                    {{-- Name --}}
+                                    <div class="col-md-12">
+                                        <label for="name" class="form-label fw-semibold">আপনার নাম লিখুন *</label>
+                                        <input type="text" id="name" name="name" value="{{ old('name') }}"
+                                            class="form-control @error('name') is-invalid @enderror" required>
+                                        @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Phone --}}
+                                    <div class="col-md-12">
+                                        <label for="phone" class="form-label fw-semibold">আপনার নাম্বার লিখুন *</label>
+                                        <input type="text" id="phone" name="phone" value="{{ old('phone') }}"
+                                            minlength="11" maxlength="11" pattern="0[0-9]+"
+                                            class="form-control @error('phone') is-invalid @enderror"
+                                            title="০ দিয়ে শুরু করে ১১ ডিজিটের নাম্বার দিন" required>
+                                        @error('phone')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Address --}}
+                                    <div class="col-md-12">
+                                        <label for="address" class="form-label fw-semibold">ঠিকানা লিখুন *</label>
+                                        <input type="text" id="address" name="address" value="{{ old('address') }}"
+                                            class="form-control @error('address') is-invalid @enderror" required>
+                                        @error('address')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                   <div class="col-md-12 mb-3">
+                                       <label for="size_color" 
+                                            class="form-label" 
+                                            style="color: red; font-weight: 900; background-color: yellow; padding: 5px;">
+                                            আপনার বেবির বয়স এখানে লিখে দেবেন *
+                                        </label>
+
+                                        <input type="text" id="size_color" name="size_color" style="height:60px; border: 2px solid red;" 
+                                            value="{{ old('size_color') }}"
+                                            class="form-control @error('size_color') is-invalid @enderror" 
+                                            placeholder="আপনার বেবির বয়স এখানে লিখে দেবেন" required>
+                                        @error('size_color')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Area --}}
+                                    <div class="col-md-12">
+                                       <label for="area" class="form-label fw-bold text-danger">
+                                            ডেলিভারি এরিয়া নিবার্চন করুন *
+                                        </label>
+
+                                        <select id="area" name="area" class="form-select @error('area') is-invalid @enderror" required>
+                                            <option value="">এরিয়া নিবার্চন করুন</option>
+                                            @foreach ($shippingcharge as $key => $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('area')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                               
+                                    <div class="col-md-12 text-center mt-2">
+                                        <button type="submit" class="btn btn-success orderNowBtn rounded-pill shadow-sm w-100">
+                                            <i class="fa-solid fa-check-circle me-1 "></i> অর্ডার করুন
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <!-- col end -->
+            <div class="col-sm-7 cust-order-1">
+                <div class="cart_details table-responsive-sm">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>অর্ডারের তথ্য</h5>
+                        </div>
+                        <div class="card-body cartlist">
+                            <style>
+                                .cart_table img {
+                                    width: 60px;
+                                    height: 60px;
+                                    object-fit: cover;
+                                    border-radius: 6px;
+                                    margin-right: 8px;
+                                }
+
+                                .cart_table .product-info {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                }
+
+                                .cart_table .quantity {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 6px;
+                                }
+
+                                .cart_table .quantity input {
+                                    width: 50px;
+                                    text-align: center;
+                                    border: 1px solid #ddd;
+                                    border-radius: 4px;
+                                }
+
+                                .cart_table .quantity button {
+                                    width: 30px;
+                                    height: 30px;
+                                    border: none;
+                                    background-color: #f0f0f0;
+                                    color: #000;
+                                    font-weight: bold;
+                                    border-radius: 4px;
+                                }
+
+                                .cart_table .quantity button:hover {
+                                    background-color: #d3d3d3;
+                                }
+ style="margin-top:100px;
+                                .cart_table tfoot th,
+                                .cart_table tfoot td {
+                                    background-color: #f8f9fa;
+                                    font-weight: bold;
+                                }
+
+                                .cart_table tr:hover {
+                                    background-color: #f1f1f1;
+                                }
+
+                                .alinur {
+                                    color: #198754;
+                                    font-weight: 600;
+                                }
+
+                                .cart_remove {
+                                    cursor: pointer;
+                                    font-size: 18px;
+                                }
+
+                                .cart_remove:hover {
+                                    color: #dc3545;
+                                }
+                            </style>
+
+                            <table class="cart_table table table-bordered table-striped text-center mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 10%;">ডিলিট</th>
+                                        <th style="width: 45%;">প্রোডাক্ট</th>
+                                        <th style="width: 15%;">পরিমাণ</th>
+                                        <th style="width: 15%;">মূল্য</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (Cart::instance('shopping')->content() as $value)
+                                        <tr>
+                                            <td>
+                                                <a class="cart_remove text-danger" data-id="{{ $value->rowId }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-start">
+                                                <a href="{{ route('product', $value->options->slug) }}" class="text-dark text-decoration-none">
+                                                    <div class="product-info">
+                                                        <img src="{{ asset($value->options->image) }}" alt="{{ $value->name }}">
+                                                        <div>
+                                                            <div class="fw-semibold">{{ Str::limit($value->name, 35) }}</div>
+                                                            <div class="small text-muted">
+                                                                @if ($value->options->product_size)
+                                                                    <span>Size: {{ $value->options->product_size }} | </span>
+                                                                @endif
+                                                                @if ($value->options->product_color)
+                                                                    <span>Color: {{ $value->options->product_color }} | </span>
+                                                                @endif
+                                                                @if ($value->options->product_model)
+                                                                    <span>Model: {{ $value->options->product_model }} | </span>
+                                                                @endif
+                                                                @if ($value->options->product_weight)
+                                                                    <span>Weight: {{ $value->options->product_weight }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </td>
+
+                                            <td>
+                                                <div class="quantity">
+                                                    <button class="cart_decrement" data-id="{{ $value->rowId }}">−</button>
+                                                    <input type="text" value="{{ $value->qty }}" readonly />
+                                                    <button class="cart_increment" data-id="{{ $value->rowId }}">+</button>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <span class="alinur">৳</span>
+                                                <strong>{{ $value->price }}</strong>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="text-end px-4">মোট</th>
+                                        <td class="px-4">
+                                            <span class="alinur">৳</span>
+                                            <strong>{{ $subtotal }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3" class="text-end px-4">ডেলিভারি চার্জ</th>
+                                        <td class="px-4">
+                                            <span class="alinur">৳</span>
+                                            <strong>{{ $shipping }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3" class="text-end px-4">ডিসকাউন্ট</th>
+                                        <td class="px-4">
+                                            <span class="alinur">৳</span>
+                                            <strong>{{ $discount + $coupon }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3" class="text-end px-4">সর্বমোট</th>
+                                        <td class="px-4">
+                                            <span class="alinur">৳</span>
+                                            <strong>{{ $subtotal + $shipping - ($discount + $coupon) }}</strong>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                         
+                        </div>
                     </div>
                 </div>
             </div>
-
-            @php
-            $products = $homecat->products;
-            $isOdd = $loop->index % 2 !== 0;
-            @endphp
-        </div>
-
-        <div class="row align-items-stretch">
-            @if($homecat->banner_image==1)
-                <div class="col-md-3 col-sm-12 mb-3 mb-md-0 d-flex {{ $isOdd ? 'order-md-2' : 'order-md-1' }}">
-                    <img class="w-100 rounded img-height-responsive" src="{{ $homecat->image }}" alt="">
-                </div>
-            @endif
-
-            <!-- Product Slider Column -->
-            <div class="  @if($homecat->banner_image==1) col-md-9 @endif @if($homecat->banner_image==0) col-md-12 @endif  col-sm-12 mt-3 mt-md-0 d-flex flex-column {{ $isOdd ? 'order-md-1' : 'order-md-2' }}">
-                <div class=" @if($homecat->banner_image==1) hotdeals-slider111 @endif @if($homecat->banner_image==0) hotdeals-slider1 @endif  owl-carousel h-100">
-                    @foreach($products as $key => $value)
-                    <div class="product_item wist_item">
-                        <div class="product_item_inner">
-                            @if($value->variable_count > 0 && $value->type == 0)
-                            @if($value->variable->old_price)
-                            <div class="discount">
-                                <p>@php $discount=(((($value->variable->old_price)-($value->variable->new_price))*100) / ($value->variable->old_price)) @endphp -{{ number_format($discount, 0) }}%</p>
-
-                            </div>
-                            @endif
-                            @else
-                            @if($value->old_price)
-                            <div class="discount">
-                                <p>@php $discount=(((($value->old_price)-($value->new_price))*100) / ($value->old_price)) @endphp -{{ number_format($discount, 0) }}%</p>
-                            </div>
-                            @endif
-                            @endif
-                            <div class="pro_img">
-                                <a href="{{ route('product', $value->slug) }}">
-                                    <img src="{{ asset($value->image ? $value->image->image : '') }}"
-                                        alt="{{ $value->name }}" />
-                                </a>
-                            </div>
-                            <div class="pro_des">
-                                <div class="pro_name mb-0 m-0">
-                                    <a
-                                        href="{{ route('product', $value->slug) }}">{{ Str::limit($value->name, 45) }}</a>
-                                </div>
-                                <div class="pro_price mt-0">
-                                    @if($value->variable_count > 0 && $value->type == 0)
-                                    <p>
-                                        @if ($value->variable->old_price)
-                                        <del>৳ {{ $value->variable->old_price }}</del>
-                                        @endif
-
-                                        ৳ {{ $value->variable->new_price }}
-
-                                    </p>
-                                    @else
-                                    <p>
-                                        @if ($value->old_price)
-                                        <del>৳ {{ $value->old_price }}</del>
-                                        @endif
-
-                                        ৳ {{ $value->new_price }}
-
-                                    </p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        @if($value->variable_count > 0 && $value->type == 0)
-                        <div class="pro_btn">
-
-                            <div class="cart_btn order_button">
-                                <a style="background: #1a81b7;" href="{{ route('product', $value->slug) }}"
-                                    class="addcartbutton">অর্ডার করুন </a>
-                            </div>
-                        </div>
-                        @else
-                        <div class="pro_btn">
-
-                            <form action="{{ route('cart.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $value->id }}" />
-                                <input type="hidden" name="qty" value="1" />
-                                <input type="hidden" name="order_now" value="অর্ডার করুন" />
-                                <button style="background: #1a81b7;" type="submit">অর্ডার করুন</button>
-                            </form>
-                        </div>
-                        @endif
-
-
-                    </div>
-                    @endforeach
-                </div>
-            </div>
+            <!-- col end -->
         </div>
     </div>
 </section>
-@endforeach
-
-
-@foreach($featured as $item)
-        <section class="homeproduct">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                <div class="title-inner d-flex justify-content-between align-items-center flex-wrap">
-                    <div class="section-title">
-                        <h2>{{ $item->name }}</h2>
-                    </div>
-                    <div class="section-btn">
-                        <a style="background:#C7206A;" href="{{ route('category', $item->slug) }}">View More</a>
-                    </div>
-                </div>
-            </div>
-                </div>
-
-                <div class="row newArrival">
-                @if($homecat->banner_image==1)
-                    <div class="col-md-3 col-sm-12 mb-3">
-                        <img class="w-100 rounded h-100" src="{{ asset($item->image ?? 'default.jpg') }}" alt="{{ $item->title }}">
-                    </div>
-                @endif
-                    <div class="@if($homecat->banner_image==1) col-md-9 @endif @if($homecat->banner_image==0) col-md-12 @endif  col-sm-12">
-                        {{-- TAB HEADERS --}}
-                        <ul class="nav nav-pills mb-3" id="pills-tab-{{ $loop->index }}" role="tablist">
-                            @foreach($item->subcategories_home as $index => $subcategory)
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {{ $index === 0 ? 'active' : '' }}" id="tab-{{ $subcategory->id }}" data-bs-toggle="pill" data-bs-target="#content-{{ $subcategory->id }}" type="button" role="tab">
-                                        {{ $subcategory->subcategoryName }}
-                                    </button>
-                                </li>
-                            @endforeach
-                        </ul>
-
-                        {{-- TAB CONTENTS --}}
-                        <div class="tab-content" id="pills-tabContent-{{ $loop->index }}">
-                            @foreach($item->subcategories_home as $index => $subcategory)
-                                <div class="tab-pane fade {{ $index === 0 ? 'show active' : '' }}" id="content-{{ $subcategory->id }}" role="tabpanel">
-                                    <div class="@if($homecat->banner_image==1) hotdeals-slider111 @endif @if($homecat->banner_image==0) hotdeals-slider1 @endif  owl-carousel">
-                                        @foreach($subcategory->products ?? [] as $product)
-                                            <div class="product_item wist_item">
-                                                <div class="product_item_inner">
-                                                    {{-- DISCOUNT --}}
-                                                    @php
-                                                        $old = $product->variable->old_price ?? $product->old_price;
-                                                        $new = $product->variable->new_price ?? $product->new_price;
-                                                    @endphp
-                                                    @if($old && $new)
-                                                        <div class="discount">
-                                                            <p>-{{ number_format((($old - $new) * 100) / $old, 0) }}%</p>
-                                                        </div>
-                                                    @endif
-
-                                                    {{-- IMAGE --}}
-                                                    <div class="pro_img">
-                                                        <a href="{{ route('product', $product->slug) }}">
-                                                            <img src="{{ asset($product->image->image ?? 'no-image.jpg') }}" alt="{{ $product->name }}" />
-                                                        </a>
-                                                    </div>
-
-                                                    {{-- DETAILS --}}
-                                                    <div class="pro_des">
-                                                        <div class="pro_name">
-                                                            <a href="{{ route('product', $product->slug) }}">
-                                                                {{ Str::limit($product->name, 40) }}
-                                                            </a>
-                                                        </div>
-                                                        <div class="pro_price">
-                                                            @if($old)
-                                                                <del>৳ {{ $old }}</del>
-                                                            @endif
-                                                            ৳ {{ $new }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {{-- BUTTON --}}
-                                                <div class="pro_btn">
-                                                    <div class="cart_btn order_button">
-                                                        <a style="background: #1a81b7;" href="{{ route('product', $product->slug) }}"
-                                                            class="addcartbutton">অর্ডার করুন </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    @endforeach
-
-
-
-
-
-
-
-
-
 @endsection @push('script')
 <script src="{{ asset('frontEnd/js/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('frontEnd/js/jquery.syotimer.min.js') }}"></script>

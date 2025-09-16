@@ -50,7 +50,16 @@
     <link rel="stylesheet" href="{{asset('frontEnd/css/style.css?v=1.0.22')}}" />
     <link rel="stylesheet" href="{{asset('frontEnd/css/responsive.css?v=1.0.22')}}" />
     <link rel="stylesheet" href="{{asset('frontEnd/css/main.css')}}" />
-
+    <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/all.css" />
+    <!-- core css -->
+    <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{asset('backEnd/')}}/assets/css/toastr.min.css" />
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/owl.theme.default.css" />
+    <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/owl.carousel.min.css" />
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/style.css" />
+    <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/responsive.css" />
 
     <style>
         .side_cat_img {
@@ -193,366 +202,33 @@
 </head>
 
 <body class="gotop" style="background: #FFFFFF;">
+<section class="description-section fixed-top bg-white shadow-sm " style="z-index: 1030; padding: 15px 0; top: 0; left: 0; right: 0; margin-top:-50px; " >
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="description-inner selectable-text">
+                    <div class="description-title text-center">
+                        <h2 class="fw-bold fs-5 mb-0">
+                            আপনি যে কতটি প্রোডাক্ট অর্ডার করতে চান তা নির্বাচন করুন। 
+                            এরপর নীচের "ক্যাশ অন ডেলিভারি" বাটনে ক্লিক করুন এবং  অর্ডার 
+                            ফর্মটি পূরণ করুন।
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- Add spacing below so content does not hide behind the fixed top --}}
+<div style="height: 80px;"></div>
 
 
 
     @php
     $subtotal = Cart::instance('shopping')->subtotal();
     @endphp
-    <div class="mobile-menu">
-        <div class="mobile-menu-logo">
-            <div class="logo-image">
-                <img src="{{asset($generalsetting?->white_logo)}}" alt="" />
-            </div>
-            <div class="mobile-menu-close">
-                <i class="fa fa-times"></i>
-            </div>
-        </div>
-        <ul class="first-nav">
-            @foreach($menucategories as $scategory)
-            <li class="parent-category">
-                <a href="{{url('category/'.$scategory?->slug)}}" class="menu-category-name">
-                    <img src="{{asset($scategory->image)}}" alt="" class="side_cat_img" />
-                    {{ $scategory->name }}
-                </a>
-                @if($scategory?->subcategories->count() > 0)
-                <span class="menu-category-toggle">
-                    <i class="fa fa-chevron-down"></i>
-                </span>
-                @endif
-                <ul class="second-nav" style="display: none;">
-                    @foreach($scategory?->subcategories as $subcategory)
-                    <li class="parent-subcategory">
-                        <a href="{{url('subcategory/'.$subcategory?->slug)}}"
-                            class="menu-subcategory-name">{{$subcategory->subcategoryName}}</a>
-                        @if($subcategory?->childcategories->count() > 0)
-                        <span class="menu-subcategory-toggle"><i class="fa fa-chevron-down"></i></span>
-                        @endif
-                        <ul class="third-nav" style="display: none;">
-                            @foreach($subcategory?->childcategories as $childcat)
-                            <li class="childcategory"><a href="{{url('products/'.$childcat->slug)}}" class="menu-childcategory-name">{{$childcat->childcategoryName}}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    @endforeach
-                </ul>
-            </li>
-            @endforeach
-        </ul>
-    </div>
-    <header id="navbar_top">
-        <div class="mobile-header">
-            <div class="mobile-logo">
-                <div class="menu-bar">
-                    <a class="toggle">
-                        <i class="fa-solid fa-bars"></i>
-                    </a>
-                </div>
-                <div class="menu-logo">
-                    <a href="{{route('home')}}"><img src="{{asset($generalsetting?->white_logo)}}" alt="" /></a>
-                </div>
-                <div class="menu-bag">
-                    <a href="{{route('customer.checkout')}}" class="margin-shopping">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span class="mobilecart-qty">{{Cart::instance('shopping')->count()}}</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="mobile-search">
-            <form id="searchForm" action="{{route('search')}}">
-                <input type="text" placeholder="Search Product ... " value="" class="msearch_keyword msearch_click src" name="keyword" />
-                <button><i data-feather="search"></i></button>
-            </form>
-            <div class="search_result"></div>
-        </div>
-
-        <div class="main-header">
-
-            <!-- Top Header Start -->
-            <!-- <div class="top-header" style="background: #191919; color: white; font-size: 12px; padding: 5px 0; position: relative; overflow: hidden; height: 25px;">
-                <div class="container d-flex justify-content-between align-items-center">
-                    <div class="scrolling-text-wrapper" style="height: 25px; overflow: hidden;">
-                        <div class="scrolling-text" style="animation: scrollUp 5s linear infinite;">
-                            <div>ЁЯФе Hot Deal: Get 20% off on all items! ЁЯФе</div>
-                            <div>ЁЯУЮ 24/7 Support: <a href="tel:{{ $contact?->hotline }}" style="color: white;
-                            text-decoration: underline;">{{ $contact?->hotline }}</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Top Header End -->
-
-            <!-- Add this CSS inside <style> -->
-            <style>
-                @keyframes scrollUp {
-                    0% {
-                        transform: translateY(0);
-                    }
-
-                    50% {
-                        transform: translateY(-25px);
-                    }
-
-                    100% {
-                        transform: translateY(0);
-                    }
-                }
-
-                .scrolling-text>div {
-                    height: 25px;
-                }
-
-                .wd-tools-icon::before {
-                    content: '\2630';
-                    /* Example: hamburger icon (тШ░) */
-                    font-size: 26px;
-                    margin-right: 8px;
-                    display: inline-block;
-                }
-            </style>
-
-            <div class="logo-area" style="background:#191919;">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="logo-header">
-                                <div class="main-logo">
-                                    <a href="{{route('home')}}"><img src="{{asset($generalsetting?->white_logo)}}"
-                                            alt="" /></a>
-                                </div>
-                                <div class="main-search">
-                                    <form id="MainSearch" action="{{route('search')}}">
-                                        <input type="text" placeholder="Search Product..." class="search_keyword search_click mainsrc" name="keyword" />
-                                        <button style="background:#F05B2E;">
-                                            <i data-feather="search"></i>
-                                        </button>
-                                    </form>
-                                    <div class="search_result"></div>
-                                </div>
-                                <div class="header-list-items">
-                                    <div class="helpline-wrapper">
-
-                                        <div class="header-action-menu">
-                                            <div class="action-item">
-                                                <a style="background:#F05B2E;" href="{{route('customer.order_track')}}">
-                                                    <img class="track-image" src="{{ asset('frontEnd/images/truck-icon.png') }}">
-                                                </a>
-                                            </div>
-
-                                            @if(Auth::guard('customer')->user())
-                                            <div class="action-item">
-                                                <a style="background:#F05B2E;" href="{{route('customer.account')}}" title="{{Str::limit(Auth::guard('customer')->user()->name,14)}}">
-                                                    <i class="woodmart woodmart-user"></i>
-                                                </a>
-                                            </div>
-                                            @else
-                                            <div class="action-item">
-                                                <a style="background:#F05B2E;" href="{{route('customer.login')}}" title="Login / Sign Up">
-                                                    <i class="woodmart woodmart-user"></i>
-                                                </a>
-                                            </div>
-                                            @endif
-
-                                            <div class="action-item" id="cart-qty">
-                                                <a href="" style="background:#F05B2E;">
-                                                    <i class="woodmart woodmart-cart"></i>
-                                                    <span>{{Cart::instance('shopping')->count()}}</span>
-                                                </a>
-
-                                                <div class="cshort-summary">
-                                                    <ul>
-                                                        @foreach(Cart::instance('shopping')->content() as $key=>$value)
-                                                        <li>
-                                                            <a href=""><img src="{{asset($value->options->image)}}" alt="" /></a>
-                                                        </li>
-                                                        <li><a href="">{{Str::limit($value->name, 30)}}</a></li>
-                                                        <li>Qty: {{$value->qty}}</li>
-                                                        <li>
-                                                            <p>рз│{{$value->price}}</p>
-                                                            <button class="remove-cart cart_remove" data-id="{{$value->rowId}}"><i class="fa-regular fa-trash-can trash_icon" title="Delete this item"></i></button>
-                                                        </li>
-                                                        @endforeach
-                                                    </ul>
-                                                    <p><strong>Sub Total: {{$subtotal}}</strong></p>
-                                                    <a href="{{ route('customer.checkout') }}" class="btn btn-primary">
-                                                        Go To Checkout
-                                                    </a>
-
-
-                                                </div>
-                                            </div>
-                                            <div class="action-item1">
-                                                <a class="btn " style="color: white; font-size:25px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
-                                                    <span class="wd-tools-icon"></span>
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <style>
-                .white-text {
-                    color: #FFFFFF !important;
-                }
-            </style>
-            <div class="menu-area" style="background:#EDEDED !important; padding-top:3px;">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12 d-flex justify-content-between">
-                            <div class="catagory_menu ">
-                                <ul>
-
-
-
-
-
-
-                                    <!-- Side Navbar -->
-                                    <div class="offcanvas offcanvas-end shadow-sm" tabindex="-1" id="sidebar" style="width: 280px;">
-                                        <div class="offcanvas-header py-2 px-3 border-bottom">
-                                            <h6 class="offcanvas-title mb-0 text-uppercase">Categories</h6>
-                                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                        </div>
-
-                                        <div class="offcanvas-body p-0 bg-light">
-                                            <ul class="list-group rounded-0">
-                                                @foreach($menucategories as $scategory)
-                                                <li class="list-group-item py-2 px-3 bg-white border-0 border-bottom">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <a href="{{ url('category/'.$scategory->slug) }}" class="text-decoration-none text-dark d-flex align-items-center small fw-semibold">
-                                                            <img src="{{ asset($scategory->image) }}" alt="" class="me-2" width="20" height="20" />
-                                                            {{ $scategory->name }}
-                                                        </a>
-                                                        @if($scategory->subcategories->count() > 0)
-                                                        <span class="text-muted" role="button" onclick="toggleSubmenu(this)">
-                                                            <i class="fa fa-chevron-down small"></i>
-                                                        </span>
-                                                        @endif
-                                                    </div>
-
-                                                    @if($scategory->subcategories->count() > 0)
-                                                    <ul class="list-group list-group-flush ms-3 mt-2 bg-white rounded" style="display: none;">
-                                                        @foreach($scategory->subcategories as $subcategory)
-                                                        <li class="list-group-item py-1 px-2 border-0">
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <a href="{{ url('subcategory/'.$subcategory->slug) }}" class="text-decoration-none text-dark small">
-                                                                    {{ $subcategory->subcategoryName }}
-                                                                </a>
-                                                                @if($subcategory->childcategories->count() > 0)
-                                                                <span class="text-muted" role="button" onclick="toggleSubmenu(this)">
-                                                                    <i class="fa fa-chevron-down small"></i>
-                                                                </span>
-                                                                @endif
-                                                            </div>
-
-                                                            @if($subcategory->childcategories->count() > 0)
-                                                            <ul class="list-group list-group-flush ms-3 mt-2 bg-white" style="display: none;">
-                                                                @foreach($subcategory->childcategories as $childcat)
-                                                                <li class="list-group-item py-1 ps-3 pe-2 border-0">
-                                                                    <a href="{{ url('products/'.$childcat->slug) }}" class="text-decoration-none text-secondary small">
-                                                                        {{ $childcat->childcategoryName }}
-                                                                    </a>
-                                                                </li>
-                                                                @endforeach
-                                                            </ul>
-                                                            @endif
-                                                        </li>
-                                                        @endforeach
-                                                    </ul>
-                                                    @endif
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-
-
-
-
-
-                                    <script>
-                                        function toggleSubmenu(el) {
-                                            const submenu = el.parentElement.nextElementSibling;
-                                            if (submenu && submenu.style.display === "none") {
-                                                submenu.style.display = "block";
-                                                el.querySelector('i').classList.add("rotate");
-                                            } else if (submenu) {
-                                                submenu.style.display = "none";
-                                                el.querySelector('i').classList.remove("rotate");
-                                            }
-                                        }
-                                    </script>
-
-
-
-
-
-
-
-
-
-
-
-                                    {{-- end offcanvas --}}
-                                    <li class="cat_bar text-white">
-                                        <a class="text-dark" href="{{route('home')}}" style="margin-top: 0px;"> <i class="fas fa-home" style="font-size: large;"></i> Home </a>
-                                    </li>
-
-                                    @foreach ($menucategories as $scategory)
-                                    <li class="cat_bar">
-                                        <a class="text-dark" style="margin-top: -5px;" href="{{ url('category/' . $scategory->slug) }}">
-                                            <span class="cat_head">{{ $scategory->name }}</span>
-                                            @if ($scategory->subcategories->count() > 0)
-                                            <i class="fa-solid fa-angle-down cat_down"></i>
-                                            @endif
-                                        </a>
-                                        @if($scategory->subcategories->count() > 0)
-                                        <ul class="Cat_menu">
-                                            @foreach ($scategory->subcategories as $subcat)
-                                            <li class="Cat_list cat_list_hover">
-                                                <a class="text-dark" href="{{ url('subcategory/' . $subcat->slug) }}">
-                                                    <span>{{ Str::limit($subcat->subcategoryName, 25) }}</span>
-                                                    @if($subcat->childcategories->count() > 0)
-                                                    <i class="fa-solid fa-chevron-right cat_down"></i>
-                                                    @endif
-                                                </a>
-                                                @if($subcat->childcategories->count() > 0)
-                                                <ul class="child_menu">
-                                                    @foreach($subcat->childcategories as $childcat)
-                                                    <li class="child_main">
-                                                        <a class="text-dark" href="{{ url('products/'.$childcat->slug) }}">
-                                                            {{ $childcat->childcategoryName }}
-                                                        </a>
-                                                    </li>
-                                                    @endforeach
-                                                </ul>
-                                                @endif
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                        @endif
-                                    </li>
-                                    @endforeach
-                                </ul>
-
-
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- main-header end -->
-    </header>
+    
     <div id="content">
         @yield('content')
     </div>
@@ -756,62 +432,35 @@
 
 
 
-    <!--=========-->
-    <div class="footer_nav">
-        <ul>
-            <li>
-                <a class="toggle">
-                    <span>
-                        <i class="fa-solid fa-bars"></i>
-                    </span>
-                    <span>Category</span>
-                </a>
-            </li>
 
-            <li>
-                <a href="{{$contact?->facebook}}">
+    <div class="footer_nav" style="padding: 10px; background: #fff;">
+        <div class="container">
+          <ul class="p-0 m-0 w-100" style="list-style: none;">
+            <li class="w-100">
+               <style>
+                    /* Optional: adjust font further for mobile if needed */
+                    @media (max-width: 576px) {
+                        .order-btn {
+                            font-size: 1.7rem !important;
+                        }
+                    }
+                </style>
+               <a href="#order_form" class="btn btn-success w-100 d-flex justify-content-between align-items-center p-3 fw-bold order-btn" style="border-radius: 10px; font-size: 1.5rem;">
                     <span>
-                        <i class="fa-brands fa-facebook"></i>
+                        নির্বাচন করা হয়েছে: <b class="mobilecart-qty">{{ Cart::instance('shopping')->count() }}</b> টি
                     </span>
-                    <span>Facebook</span>
+                    <span>
+                          ক্যাশ অন ডেলিভারি-তে অর্ডার করুন
+                    </span>
                 </a>
-            </li>
 
-            <li class="mobile_home">
-                <a href="{{route('home')}}">
-                    <span><i class="fa-solid fa-home"></i></span> <span>Home</span>
-                </a>
-            </li>
 
-            <li>
-                <a href="{{route('customer.checkout')}}">
-                    <span>
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </span>
-                    <span>Cart (<b class="mobilecart-qty">{{Cart::instance('shopping')->count()}}</b>)</span>
-                </a>
+
             </li>
-            @if(Auth::guard('customer')->user())
-            <li>
-                <a href="{{route('customer.account')}}">
-                    <span>
-                        <i class="fa-solid fa-user"></i>
-                    </span>
-                    <span>Account</span>
-                </a>
-            </li>
-            @else
-            <li>
-                <a href="{{route('customer.login')}}">
-                    <span>
-                        <i class="fa-solid fa-user"></i>
-                    </span>
-                    <span>Login</span>
-                </a>
-            </li>
-            @endif
-        </ul>
+          </ul>
+        </div>
     </div>
+
 
 
     <div class="scrolltop" style="">
@@ -894,23 +543,29 @@
             }
         });
         $(".cart_store").on("click", function() {
+            
             var id = $(this).data("id");
             var qty = $(this).parent().find("input").val();
             if (id) {
-                $.ajax({
-                    type: "GET",
+              $.ajax({
+                    type: "POST",
+                    url: "{{ route('cart.store') }}",
                     data: {
+                        _token: "{{ csrf_token() }}", // ✅ CSRF token
                         id: id,
                         qty: qty ? qty : 1
                     },
-                    url: "{{route('cart.store')}}",
-                    success: function(data) {
-                        if (data) {
-                            toastr.success('Success', 'Product add to cart succfully');
-                            return cart_count() + mobile_cart();
+                  success: function (data) {
+                            if (data) {
+                                toastr.success('Success', 'Product added to cart successfully');
+                                cart_count();
+                                mobile_cart();
+                                   window.location.href = "#order";
+                            }
                         }
-                    },
+
                 });
+
             }
         });
 

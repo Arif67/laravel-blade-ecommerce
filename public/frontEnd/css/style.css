@@ -1288,7 +1288,7 @@ li.con_title a {
 
 /*==== FOOTER FIXED MENU START ====  */
 .footer_nav {
-    display: none;
+    display: block;
     text-align: center;
     padding: 10px 0;
     position: fixed;
@@ -1299,10 +1299,7 @@ li.con_title a {
     border-top: 1px solid #ddd;
 }
 
-.footer_nav ul {
-    display: grid;
-    grid-template-columns: repeat(5,1fr);
-}
+
 
 .footer_nav ul li a span {
     display: block;

@@ -16,12 +16,7 @@
         <!-- owl carousel -->
         <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/style.css" />
         <link rel="stylesheet" href="{{ asset('frontEnd/campaign/css') }}/responsive.css" />
-        @foreach($pixels as $pixel)
-        <!-- Facebook Pixel Code -->
-
-        <!-- End Facebook Pixel Code -->
-        @endforeach
-
+      
         <meta name="app-url" content="{{route('campaign',$campaign->slug)}}" />
         <meta name="robots" content="index, follow" />
         <meta name="description" content="{{$campaign->short_description}}" />
@@ -59,10 +54,10 @@
                     <div class="col-sm-10">
                         <div class="campaign_banner">
                             <div class="banner_title">
-                                <h2>{{$campaign->name}}</h2>
+                                <h2>{{$campaign?->name}}</h2>
                             </div>
                             <div class="banner-img">
-                                <img src="{{asset($campaign->banner)}}" alt="">
+                                <img src="{{asset($campaign?->banner)}}" alt="">
                             </div>
                         </div>
                     </div>
@@ -77,7 +72,7 @@
                 <div class="row justify-content-center">
                     <div class="col-sm-8">
                         <div class="short-des-title">
-                            {!! $campaign->short_description !!}
+                            {!! $campaign?->short_description !!}
                         </div>
                         <div class="ord_btn">
                             <a href="#order_form" class="order_place"> অর্ডার করুন <i class="fa-solid fa-arrow-down"></i> </a>
@@ -86,19 +81,29 @@
                 </div>
             </div>
         </section>
-         <!-- short-desctiption section end -->
 
-        <!-- desctiption section start -->
+
+ 
+     
+       
+
+ 
+
+
+
+
+
+        
         <section class="description-section">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="description-inner">
+                        <div class="description-inner selectable-text">
                             <div class="description-title">
-                                <h2>{{$campaign->description_title}}</h2>
+                                <h2>{{$campaign?->description_title}}</h2>
                             </div>
                             <div class="main-description">
-                                {!! $campaign->description !!}
+                                {!! $campaign?->description !!}
                             </div>
                         </div>
                         <div class="ord_btn mt-5">
@@ -108,6 +113,16 @@
                 </div>
             </div>
         </section>
+
+        <style>
+            .selectable-text {
+                -webkit-user-select: text !important; /* Chrome, Safari */
+                -moz-user-select: text !important;    /* Firefox */
+                -ms-user-select: text !important;     /* IE/Edge */
+                user-select: text !important;         /* Standard */
+            }
+        </style>
+
          <!-- desctiption section end -->
 
         <!-- desctiption section start -->
@@ -120,7 +135,7 @@
                                 <h2>আমাদের প্রোডাক্ট কোনো কিনবেন?</h2>
                             </div>
                             <div class="main-whychoose">
-                                {!! $campaign->description !!}
+                                {!! $campaign?->description !!}
                             </div>
                         </div>
                         <div class="ord_btn my-5">
@@ -133,28 +148,28 @@
          <!-- desctiption section end -->
 
          <!-- review section start -->
-         @if($campaign->images)
-         <section class="review-section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="rev_inn">
-                            <div class="rev_title">
-                                <h2>আমাদের কাস্টমারের রিভিউ?</h2>
+         @if($campaign?->images)
+            <section class="review-section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="rev_inn">
+                                <div class="rev_title">
+                                    <h2>আমাদের কাস্টমারের রিভিউ?</h2>
+                                </div>
+                                <div class="review_slider owl-carousel">
+                                @foreach($campaign?->images as $key=>$value)
+                                <div class="review_item">
+                                    <img src="{{asset($value->image)}}" alt="">
+                                </div>
+                                @endforeach
                             </div>
-                            <div class="review_slider owl-carousel">
-                            @foreach($campaign->images as $key=>$value)
-                            <div class="review_item">
-                                <img src="{{asset($value->image)}}" alt="">
                             </div>
-                            @endforeach
-                           </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        @endif
+            </section>
+         @endif
         <!-- review section end -->
 
         <!-- offer price form end -->
@@ -247,6 +262,19 @@
                                                         @enderror
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group mb-3">
+                                                        <label for="note">আপনার সাইজ ও কালার নোট লিখুন *</label>
+                                                        <textarea id="note" class="form-control @error('note') is-invalid @enderror" 
+                                                                name="note" rows="3" placeholder="যেমন: লাল কালার, L সাইজ চাই" required>{{ old('note') }}</textarea>
+                                                        @error('note')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
                                                 <!-- col-end -->
                                                 @if($productcolors->count() > 0)
                                                      <div class="pro-color" style="width: 100%;">

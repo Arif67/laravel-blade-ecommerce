@@ -408,7 +408,7 @@
             <div class="col-sm-8">
                 <!-- Description Section -->
                 <div class="description tab-content details-action-box" id="description">
-                    <h2>বিস্তারিত</h2>
+                    <h2> বিস্তারিত </h2>
                     <p>{!! $details?->description !!}</p>
                 </div>
 

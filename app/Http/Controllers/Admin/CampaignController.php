@@ -11,12 +11,13 @@ use Image;
 use Toastr;
 use Str;
 use File;
-
+use Illuminate\Support\Facades\DB;
 class CampaignController extends Controller
 {
     public function index(Request $request)
     {
         $show_data = Campaign::orderBy('id','DESC')->get();
+       // dd($show_data);
         return view('backEnd.campaign.index',compact('show_data'));
     }
     public function create()
@@ -24,48 +25,65 @@ class CampaignController extends Controller
         $products = Product::where(['status'=>1])->select('id','name','status')->get();
         return view('backEnd.campaign.create',compact('products'));
     }
-    public function store(Request $request)
+  public function store(Request $request)
     {
         $this->validate($request, [
             'short_description' => 'required',
-            'description' => 'required',
-            'name' => 'required',
-            'status' => 'required',
+            'description'       => 'required',
+            'name'              => 'required',
+            'status'            => 'required',
         ]);
-        
-        $input = $request->except(['files','image']);
-        
-        // banner
-        $image1 = $request->file('banner');
-        $name1 =  time().'-'.$image1->getClientOriginalName();
-        $name1 = strtolower(preg_replace('/\s+/', '-', $name1));
-        $uploadPath1 = 'public/uploads/campaign/';
-        $image1->move($uploadPath1,$name1);
-        $imageUrl1 =$uploadPath1.$name1;
 
-        $input['slug'] = strtolower(Str::slug($request->name));
-        $input['banner'] = $imageUrl1;
-        $campaign = Campaign::create($input); 
+        DB::beginTransaction();
 
-        $images = $request->file('image');
-        if($images){
-            foreach ($images as $key => $image) {
-                $name =  time().'-'.$image->getClientOriginalName();
-                $name = strtolower(preg_replace('/\s+/', '-', $name));
-                $uploadPath = 'public/uploads/campaign/';
-                $image->move($uploadPath,$name);
-                $imageUrl =$uploadPath.$name;
+        try {
+            $input = $request->except(['files','image']);
 
-                $pimage             = new CampaignReview();
-                $pimage->campaign_id = $campaign->id;
-                $pimage->image       = $imageUrl;
-                $pimage->save();
+            // Handle banner upload
+            if ($request->hasFile('banner')) {
+                $image1 = $request->file('banner');
+                $name1 = time().'-'.$image1->getClientOriginalName();
+                $name1 = strtolower(preg_replace('/\s+/', '-', $name1));
+                $uploadPath1 = 'public/uploads/campaign/';
+                $image1->move($uploadPath1, $name1);
+                $imageUrl1 = $uploadPath1.$name1;
+
+                $input['banner'] = $imageUrl1;
             }
-            
-        }       
-        
-        Toastr::success('Success','Data insert successfully');
-        return redirect()->route('campaign.index');
+
+            $input['slug'] = strtolower(Str::slug($request->name));
+            $campaign = Campaign::create($input);
+
+            // Handle multiple images
+            $images = $request->file('image');
+            if ($images) {
+                foreach ($images as $image) {
+                    $name = time().'-'.$image->getClientOriginalName();
+                    $name = strtolower(preg_replace('/\s+/', '-', $name));
+                    $uploadPath = 'public/uploads/campaign/';
+                    $image->move($uploadPath, $name);
+                    $imageUrl = $uploadPath.$name;
+
+                    $pimage = new CampaignReview();
+                    $pimage->campaign_id = $campaign->id;
+                    $pimage->image = $imageUrl;
+                    $pimage->save();
+                }
+            }
+
+            DB::commit();
+            Toastr::success('Success','Data inserted successfully');
+            return redirect()->route('campaign.index');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // log the error for debugging
+            Log::error('Campaign Store Error: '.$e->getMessage());
+
+            Toastr::error('Error','Something went wrong. Please try again!');
+            return redirect()->back()->withInput();
+        }
     }
     
     public function edit($id)
@@ -77,57 +95,75 @@ class CampaignController extends Controller
         return view('backEnd.campaign.edit',compact('edit_data','products','select_products'));
     }
     
-    public function update(Request $request)
-    { 
-        $this->validate($request, [
-            'name' => 'required',
-            'short_description' => 'required',
-            'description' => 'required',
-            'status' => 'required',
-        ]);
-        // image one
-        $update_data = Campaign::find($request->hidden_id);
+  public function update(Request $request)
+{ 
+    $this->validate($request, [
+        'name'              => 'required',
+        'short_description' => 'required',
+        'description'       => 'required',
+        'status'            => 'required',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $update_data = Campaign::findOrFail($request->hidden_id);
         $input = $request->except('hidden_id','product_ids','files','image');
-        
-        $image1 = $request->file('banner');
-        if($image1){
+
+        // Handle banner upload
+        if ($request->hasFile('banner')) {
             $image1 = $request->file('banner');
-            $name1 =  time().'-'.$image1->getClientOriginalName();
+            $name1 = time().'-'.$image1->getClientOriginalName();
             $name1 = strtolower(preg_replace('/\s+/', '-', $name1));
             $uploadPath1 = 'public/uploads/campaign/';
-            $image1->move($uploadPath1,$name1);
-            $imageUrl1 =$uploadPath1.$name1;
-            File::delete($update_data->banner);
+            $image1->move($uploadPath1, $name1);
+            $imageUrl1 = $uploadPath1.$name1;
+
+            // Delete old file if exists
+            if ($update_data->banner && File::exists($update_data->banner)) {
+                File::delete($update_data->banner);
+            }
+
             $input['banner'] = $imageUrl1;
-        }else{
+        } else {
             $input['banner'] = $update_data->banner;
         }
 
-
+        // Update slug
         $input['slug'] = strtolower(Str::slug($request->name));
-        $update_data = Campaign::find($request->hidden_id);
+
+        // Update campaign data
         $update_data->update($input);
 
+        // Handle new images
         $images = $request->file('image');  
-        if($images){
-            foreach ($images as $key => $image) {
-                $name =  time().'-'.$image->getClientOriginalName();
+        if ($images) {
+            foreach ($images as $image) {
+                $name = time().'-'.$image->getClientOriginalName();
                 $name = strtolower(preg_replace('/\s+/', '-', $name));
                 $uploadPath = 'public/uploads/campaign/';
-                $image->move($uploadPath,$name);
-                $imageUrl =$uploadPath.$name;
+                $image->move($uploadPath, $name);
+                $imageUrl = $uploadPath.$name;
 
-                $pimage             = new CampaignReview();
+                $pimage = new CampaignReview();
                 $pimage->campaign_id = $update_data->id;
-                $pimage->image      = $imageUrl;
+                $pimage->image = $imageUrl;
                 $pimage->save();
             }
         }
 
-        Toastr::success('Success','Data update successfully');
+        DB::commit();
+        Toastr::success('Success','Data updated successfully');
         return redirect()->route('campaign.index');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Campaign Update Error: '.$e->getMessage());
+
+        Toastr::error('Error','Something went wrong. Please try again!');
+        return redirect()->back()->withInput();
     }
- 
+}
     public function inactive(Request $request)
     {
         $inactive = Campaign::find($request->hidden_id);
