@@ -1,15 +1,21 @@
 @extends('backEnd.layouts.master')
 @section('title','Pixels Manage')
 @section('css')
-<link href="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
-<link href="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
-<link href="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css" />
-<link href="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('backEnd/')}}/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('backEnd/')}}/assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('backEnd/')}}/assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('backEnd/')}}/assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
 <div class="container-fluid">
     
+  @php 
+
+        dd($campaign);
+  @endphp
+
+
     <!-- start page title -->
     <div class="row">
         <div class="col-12">
@@ -29,10 +35,12 @@
                 <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
                     <thead>
                         <tr>
-                            <th>SL</th>
-                            <th>Pixels ID</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th> SL</th>
+                            <th> Pixels ID</th>
+                            <th> Test Event Code </th>
+                            <th> Access Token </th>
+                            <th> Status</th>
+                            <th> Action</th>
                         </tr>
                     </thead>
                 
@@ -40,9 +48,14 @@
                     <tbody>
                         @foreach($data as $key=>$value)
                         <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$value->code}}</td>
-                            <td>@if($value->status==1)<span class="badge bg-soft-success text-success">Active</span> @else <span class="badge bg-soft-danger text-danger">Inactive</span> @endif</td>
+                            <td> {{$loop->iteration}} </td>
+                            <td> {{$value->code}} </td>
+                            <td> {{ $value->test_event_code }} </td>
+                     <td class="access-token">{{ $value->access_token }}</td>
+
+
+
+                            <td> @if($value->status==1)<span class="badge bg-soft-success text-success">Active</span> @else <span class="badge bg-soft-danger text-danger">Inactive</span> @endif</td>
                             <td>
                                 <div class="button-list">
                                     @if($value->status == 1)
@@ -79,20 +92,30 @@
 
 
 @section('script')
+
+            <script>
+            document.querySelectorAll('.access-token').forEach(function(el) {
+                let text = el.textContent.trim();
+                let limit = 5; // show first 5 characters
+                if (text.length > limit) {
+                    el.textContent = text.substring(0, limit) + "...";
+                }
+            });
+            </script>
 <!-- third party js -->
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-buttons/js/buttons.flash.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/datatables.net-select/js/dataTables.select.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/pdfmake/build/pdfmake.min.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/libs/pdfmake/build/vfs_fonts.js"></script>
-<script src="{{asset('/public/backEnd/')}}/assets/js/pages/datatables.init.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/datatables.net-select/js/dataTables.select.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="{{asset('backEnd/')}}/assets/js/pages/datatables.init.js"></script>
 <!-- third party js ends -->
 @endsection

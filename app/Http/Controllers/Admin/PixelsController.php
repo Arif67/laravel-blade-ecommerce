@@ -24,7 +24,7 @@ class PixelsController extends Controller
             'status' => 'required',
         ]);
         $input = $request->all();
-       EcomPixel::create($input);
+        EcomPixel::create($input);
         Toastr::success('Success','Data insert successfully');
         return redirect()->route('pixels.index');
     }

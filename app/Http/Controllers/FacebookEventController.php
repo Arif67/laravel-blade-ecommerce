@@ -8,13 +8,29 @@ use Illuminate\Support\Facades\Log;
 
 class FacebookEventController extends Controller
 {
+
+    protected $pixelId;
+    protected $accessToken;
+    protected $testEventCode;
+
+    public function __construct()
+    {
+        $pixel = EcomPixel::where('status', 1)->first();
+
+        if ($pixel) {
+            $this->pixelId       = $pixel->code;          // or $pixel->pixel_id if you use that column
+            $this->accessToken   = $pixel->access_token;
+            $this->testEventCode = $pixel->test_event_code;
+        }
+    }
+
+
+
   public function pageViewCAPI(Request $request)
   {
-    $pixelId     = '1280929069904279';
-    $accessToken = 'EAAKrwnTBIFUBPbQZCSWFbBxd57GPybBLKyKCc2YspMsjZCwNsYQ8HIRqn9qqbwBZBZCe8uTJfH5rZCr0LgZAxxL1iDAhCKMWOunYO92KPWdVYZBoYyHp82iQjn3t9p9FePVhsmtO9ob5XJAVZATOltpH3BOIrkdjRObjzBuYqiOWT7Dhr3vNliGeKE69xojazQZDZD';
-
-    // ✅ Test Event Code (remove in production)
-    $testEventCode = 'TEST43269';
+    $pixelId       = $this->pixelId;
+    $accessToken   = $this->accessToken;
+    $testEventCode = $this->testEventCode;
 
     try {
         $eventData = [
@@ -62,11 +78,9 @@ class FacebookEventController extends Controller
 
   public function viewContent(Request $request)
     {
-        $pixelId     = '1280929069904279';
-        $accessToken = 'EAAKrwnTBIFUBPbQZCSWFbBxd57GPybBLKyKCc2YspMsjZCwNsYQ8HIRqn9qqbwBZBZCe8uTJfH5rZCr0LgZAxxL1iDAhCKMWOunYO92KPWdVYZBoYyHp82iQjn3t9p9FePVhsmtO9ob5XJAVZATOltpH3BOIrkdjRObjzBuYqiOWT7Dhr3vNliGeKE69xojazQZDZD';
-    
-        // ✅ Your Test Event Code from Events Manager
-        $testEventCode = 'TEST43269';
+        $pixelId       = $this->pixelId;
+        $accessToken   = $this->accessToken;
+        $testEventCode = $this->testEventCode;
     
         try {
             $eventData = [
@@ -142,9 +156,9 @@ public function addToCart(Request $request)
         'fbc'               => 'nullable|string', // 🔥 added
     ]);
 
-    $pixelId       = '1280929069904279'; 
-    $accessToken   = 'EAAKrwnTBIFUBPbQZCSWFbBxd57GPybBLKyKCc2YspMsjZCwNsYQ8HIRqn9qqbwBZBZCe8uTJfH5rZCr0LgZAxxL1iDAhCKMWOunYO92KPWdVYZBoYyHp82iQjn3t9p9FePVhsmtO9ob5XJAVZATOltpH3BOIrkdjRObjzBuYqiOWT7Dhr3vNliGeKE69xojazQZDZD';
-    $testEventCode = 'TEST43269'; // ✅ Test code from Events Manager
+    $pixelId       = $this->pixelId;
+    $accessToken   = $this->accessToken;
+    $testEventCode = $this->testEventCode;
 
     $eventData = [
         'data' => [
@@ -207,11 +221,9 @@ public function addToCart(Request $request)
    public function beginCheckoutCAPI(Request $request)
     {
         try {
-            $pixelId     = '1280929069904279'; 
-            $accessToken = 'EAAKrwnTBIFUBPbQZCSWFbBxd57GPybBLKyKCc2YspMsjZCwNsYQ8HIRqn9qqbwBZBZCe8uTJfH5rZCr0LgZAxxL1iDAhCKMWOunYO92KPWdVYZBoYyHp82iQjn3t9p9FePVhsmtO9ob5XJAVZATOltpH3BOIrkdjRObjzBuYqiOWT7Dhr3vNliGeKE69xojazQZDZD';
-    
-            // ✅ Use your Events Manager test event code
-            $testEventCode = 'TEST43269';
+            $pixelId       = $this->pixelId;
+            $accessToken   = $this->accessToken;
+            $testEventCode = $this->testEventCode;
     
             // Extract content_ids from items
             $items = $request->input('items', []);
@@ -279,11 +291,9 @@ public function addToCart(Request $request)
 
   public function purchaseCAPI(Request $request)
 {
-    $pixelId     = '1280929069904279'; 
-    $accessToken = 'EAAKrwnTBIFUBPbQZCSWFbBxd57GPybBLKyKCc2YspMsjZCwNsYQ8HIRqn9qqbwBZBZCe8uTJfH5rZCr0LgZAxxL1iDAhCKMWOunYO92KPWdVYZBoYyHp82iQjn3t9p9FePVhsmtO9ob5XJAVZATOltpH3BOIrkdjRObjzBuYqiOWT7Dhr3vNliGeKE69xojazQZDZD';
-
-    // ✅ Test Event Code from Events Manager (remove in production)
-    $testEventCode = 'TEST43269';
+    $pixelId       = $this->pixelId;
+    $accessToken   = $this->accessToken;
+    $testEventCode = $this->testEventCode;
 
     try {
         $contents   = [];

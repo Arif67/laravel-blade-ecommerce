@@ -57,6 +57,7 @@
                     <th style="width:10%">Phone</th>
                     <th style="width:10%">Assign</th>
                     <th style="width:10%">Amount</th>
+                     <th style="width:10%">Note</th>
                     <th style="width:10%">Trak Order  </th>
                     <th style="width:10%">Status</th>
                     <th> Froud Checker </th>
@@ -97,6 +98,7 @@
                             <td>{{$value->shipping?$value->shipping->phone:''}}</td>
                             <td>{{$value->user?$value->user->name:''}}</td>
                             <td>৳{{$value->amount}}</td>
+                            <td> {{ $value->note ?? " "}}</td>
                             <td> 
                              @if($value->courier == 'pathao' && $value->status->name =='Shipped')
                                 <a href="https://merchant.pathao.com/tracking?consignment_id={{ $value->tracking_id }}&phone={{ $value->shipping->phone }}" 

@@ -126,7 +126,7 @@
     }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
     
     // 🔹 Initialize Pixel
-    fbq('init', '1280929069904279');
+    fbq('init', '1472217490858282');
     
     // 🔹 Generate unique event ID (same for Pixel + CAPI)
     const eventId = 'pageview_' + Date.now();
@@ -192,7 +192,7 @@
     
     <noscript>
       <img height="1" width="1" style="display:none"
-           src="https://www.facebook.com/tr?id=1280929069904279&ev=PageView&noscript=1"/>
+           src="https://www.facebook.com/tr?id=1472217490858282&ev=PageView&noscript=1"/>
     </noscript>
 
 
@@ -304,7 +304,7 @@
                     <div class="col-md-9 text-center text-md-start mb-3 mb-md-0">
                         <div class="copyright px-3 py-2 rounded" style="background: linear-gradient(135deg, #1f1f2e, #2c2c3e); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                             <p class="text-white mb-0" style="font-size: 15px; font-weight: 400;">
-                                <span style="color: #FFD700;">Moderncollectionhub</span>All rights reserved.
+                                <span style="color: #FFD700;">alonsbd </span>All rights reserved.
                                 <br class="d-md-none">
                                 Developed with <span style="color: #ff4c60;"></span> by
                                 <a href="https://codexlabbd.com" target="_blank"
@@ -430,36 +430,37 @@
     }
 </script>
 
+<style>
+/* Adjust font size and padding for mobile screens */
+@media (max-width: 576px) {
+    .order-btn {
+        font-size: 1rem !important; /* smaller font for mobile */
+        padding: 0.8rem 1rem !important; /* reduce padding */
+    }
+}
+</style>
 
 
 
-    <div class="footer_nav" style="padding: 10px; background: #fff;">
-        <div class="container">
-          <ul class="p-0 m-0 w-100" style="list-style: none;">
+
+   <div class="footer_nav" style="padding: 5px; background: #fff;">
+    <div class="container">
+        <ul class="p-0 m-0 w-100" style="list-style: none;">
             <li class="w-100">
-               <style>
-                    /* Optional: adjust font further for mobile if needed */
-                    @media (max-width: 576px) {
-                        .order-btn {
-                            font-size: 1.7rem !important;
-                        }
-                    }
-                </style>
-               <a href="#order_form" class="btn btn-success w-100 d-flex justify-content-between align-items-center p-3 fw-bold order-btn" style="border-radius: 10px; font-size: 1.5rem;">
+                <a href="#order_form"
+                   class="btn btn-success w-100 d-flex justify-content-between align-items-center p-2 fw-bold order-btn"
+                   style="border-radius: 10px; font-size: 1.3rem;">
                     <span>
                         নির্বাচন করা হয়েছে: <b class="mobilecart-qty">{{ Cart::instance('shopping')->count() }}</b> টি
                     </span>
                     <span>
-                          ক্যাশ অন ডেলিভারি-তে অর্ডার করুন
+                        ক্যাশ অন ডেলিভারি-তে অর্ডার করুন
                     </span>
                 </a>
-
-
-
             </li>
-          </ul>
-        </div>
+        </ul>
     </div>
+</div>
 
 
 
@@ -469,7 +470,7 @@
         </div>
     </div>
 
-    <!-- /. fixed sidebar -->
+
 
     <div id="custom-modal"></div>
     <div id="page-overlay"></div>

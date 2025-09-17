@@ -1,8 +1,8 @@
 @extends('backEnd.layouts.master')
 @section('title','Pixels Create')
 @section('css')
-<link href="{{asset('public/backEnd')}}/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-<link href="{{asset('public/backEnd')}}/assets/css/switchery.min.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('backEnd')}}/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+<link href="{{asset('backEnd')}}/assets/css/switchery.min.css" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -30,6 +30,28 @@
                             <label for="code" class="form-label">Pixels ID *</label>
                             <input type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" id="code" required="">
                             @error('code')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                     <div class="col-sm-12">
+                        <div class="form-group mb-3">
+                            <label for="test_event_code" class="form-label">Test Event Code *</label>
+                            <input type="text" class="form-control @error('test_event_code') is-invalid @enderror" name="test_event_code" value="{{ old('test_event_code') }}" id="test_event_code" >
+                            @error('test_event_code')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                      <div class="col-sm-12">
+                        <div class="form-group mb-3">
+                            <label for="access_token" class="form-label"> Access Token * </label>
+                            <input type="text" class="form-control @error('access_token') is-invalid @enderror" name="access_token" value="{{ old('access_token') }}" id="access_token" >
+                            @error('access_token')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -67,11 +89,11 @@
 
 
 @section('script')
-<script src="{{asset('public/backEnd/')}}/assets/libs/parsleyjs/parsley.min.js"></script>
-<script src="{{asset('public/backEnd/')}}/assets/js/pages/form-validation.init.js"></script>
-<script src="{{asset('public/backEnd/')}}/assets/libs/select2/js/select2.min.js"></script>
-<script src="{{asset('public/backEnd/')}}/assets/js/pages/form-advanced.init.js"></script>
-<script src="{{asset('public/backEnd/')}}/assets/js/switchery.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/js/pages/form-validation.init.js"></script>
+<script src="{{asset('backEnd/')}}/assets/libs/select2/js/select2.min.js"></script>
+<script src="{{asset('backEnd/')}}/assets/js/pages/form-advanced.init.js"></script>
+<script src="{{asset('backEnd/')}}/assets/js/switchery.min.js"></script>
 <script>
     $(document).ready(function(){
         var elem = document.querySelector('.js-switch');

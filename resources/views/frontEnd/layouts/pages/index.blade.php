@@ -337,17 +337,17 @@
                                         @enderror
                                     </div>
                                    <div class="col-md-12 mb-3">
-                                       <label for="size_color" 
+                                       <label for="note" 
                                             class="form-label" 
                                             style="color: red; font-weight: 900; background-color: yellow; padding: 5px;">
                                             আপনার বেবির বয়স এখানে লিখে দেবেন *
                                         </label>
 
-                                        <input type="text" id="size_color" name="size_color" style="height:60px; border: 2px solid red;" 
-                                            value="{{ old('size_color') }}"
-                                            class="form-control @error('size_color') is-invalid @enderror" 
+                                        <input type="text" id="note" name="note" style="height:60px; border: 2px solid red;" 
+                                            value="{{ old('note') }}"
+                                            class="form-control @error('note') is-invalid @enderror" 
                                             placeholder="আপনার বেবির বয়স এখানে লিখে দেবেন" required>
-                                        @error('size_color')
+                                        @error('note')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

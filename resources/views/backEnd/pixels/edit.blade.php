@@ -22,41 +22,61 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
-                <form action="{{route('pixels.update')}}" method="POST" class=row data-parsley-validate=""  enctype="multipart/form-data">
+               <form action="{{route('pixels.update')}}" method="POST" class="row" data-parsley-validate enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" value="{{$edit_data->id}}" name="id">
+                    <input type="hidden" value="{{ $edit_data->id }}" name="id">
+
                     <div class="col-sm-12">
                         <div class="form-group mb-3">
                             <label for="code" class="form-label">Pixels ID *</label>
-                            <input type="text" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ $edit_data->code}}" id="code" required="">
+                            <input type="text" class="form-control @error('code') is-invalid @enderror"
+                                name="code" value="{{ $edit_data->code }}" id="code" required>
                             @error('code')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
                         </div>
                     </div>
-                    <!-- col-end -->
+
+                    <div class="col-sm-12">
+                        <div class="form-group mb-3">
+                            <label for="test_event_code" class="form-label">Test Event Code *</label>
+                            <input type="text" class="form-control @error('test_event_code') is-invalid @enderror"
+                                name="test_event_code" value="{{ $edit_data->test_event_code }}" id="test_event_code">
+                            @error('test_event_code')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group mb-3">
+                            <label for="access_token" class="form-label">Access Token *</label>
+                            <input type="text" class="form-control @error('access_token') is-invalid @enderror"
+                                name="access_token" value="{{ $edit_data->access_token }}" id="access_token">
+                            @error('access_token')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 mb-3">
                         <div class="form-group">
                             <label for="status" class="d-block">Status</label>
                             <label class="switch">
-                              <input type="checkbox" value="1" name="status" @if($edit_data->status==1)checked @endif>
-                              <span class="slider round"></span>
+                                <input type="checkbox" value="1" name="status" @if($edit_data->status == 1) checked @endif>
+                                <span class="slider round"></span>
                             </label>
                             @error('status')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                             @enderror
                         </div>
                     </div>
-                    <!-- col end -->
-                    <div>
-                        <input type="submit" class="btn btn-success" value="Submit">
-                    </div>
 
+                    <div>
+                        <input type="submit" class="btn btn-success" value="Update">
+                    </div>
                 </form>
+
 
             </div> <!-- end card-body-->
         </div> <!-- end card-->
